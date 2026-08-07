@@ -162,7 +162,7 @@ section > p {
 }
 
 /* CSS Grid for Language Cards */
-.language-grid, .tutor-grid {
+.language-grid, .tutor-grid, .pricing-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
@@ -263,26 +263,163 @@ footer {
 }
 
 /* ==========================================================================
-   9. RESPONSIVE & MOBILE
+   9. PRICING SECTION
+   ========================================================================== */
+.pricing-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.pricing-card .btn-secondary, .pricing-card .btn-primary {
+    margin-top: auto; /* Pushes button to the bottom */
+}
+
+.price {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin: 1rem 0;
+}
+
+.price sup {
+    font-size: 1.5rem;
+    font-weight: 500;
+    top: -1.2rem;
+}
+
+.price-cents {
+    font-size: 1.5rem;
+    font-weight: 700;
+    position: relative;
+    top: -1.2rem;
+}
+
+.per-lesson-price {
+    color: var(--text-muted);
+    margin-top: -1rem;
+    margin-bottom: 1.5rem;
+}
+
+.features-list {
+    list-style: none;
+    margin-bottom: 2rem;
+    text-align: left;
+    color: var(--text-muted);
+}
+
+.features-list li {
+    margin-bottom: 0.5rem;
+}
+
+/* "Most Popular" Card Styling */
+.pricing-card.popular {
+    border-color: var(--primary-color);
+    border-width: 2px;
+    transform: scale(1.05);
+}
+
+.pricing-card.popular:hover {
+    transform: scale(1.05) translateY(-4px);
+}
+
+.popular-badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+        font-weight: 600;
+}
+
+
+/* ==========================================================================
+   10. ABOUT US SECTION
+   ========================================================================== */
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr; /* Image column, Text column */
+    gap: 2.5rem;
+    align-items: center;
+    text-align: left;
+}
+
+.about-image img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    object-fit: cover;
+    max-height: 350px;
+}
+
+.about-text h3 {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.about-text p {
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   11. TUTOR PROFILE PAGE
+   ========================================================================== */
+.profile-page-section {
+    padding-top: 2rem; /* Less padding at the top */
+}
+
+.profile-header {
+    display: grid;
+    grid-template-columns: auto 1fr; /* Image size is auto, text takes rest */
+    gap: 2.5rem;
+    align-items: center;
+    background-color: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    margin-bottom: 4rem;
+}
+
+.profile-image-wrapper img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary-color);
+}
+
+.profile-details h1 {
+    font-size: 2.25rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.profile-bio {
+    color: var(--text-muted);
+    max-width: 65ch; /* Improve readability */
+}
+
+.profile-booking-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 2.5rem;
+}
+
+/* ==========================================================================
+   12. RESPONSIVE & MOBILE
    ========================================================================== */
 .hamburger {
     display: none; /* Hidden on desktop */
-    cursor: pointer;
-}
 
-.hamburger .bar {
-    display: block;
-    width: 25px;
-    height: 3px;
-    margin: 5px auto;
-    background-color: var(--text-dark);
-    transition: all 0.3s ease-in-out;
-}
-
-@media screen and (max-width: 768px) {
-    /* Show hamburger and adjust nav links for mobile */
-    .hamburger {
-        display: block;
     }
 
     .nav-links {
@@ -349,5 +486,31 @@ footer {
     .hero-buttons .btn-secondary {
         width: 80%;
         max-width: 300px;
+    }
+
+    .pricing-card.popular {
+        transform: scale(1); /* Don't scale up on mobile */
+    }
+
+    .about-content {
+        grid-template-columns: 1fr; /* Stack columns on mobile */
+        gap: 2rem;
+    }
+    .about-text {
+        text-align: center;
+    }
+
+    /* Responsive adjustments for profile page */
+    .profile-header {
+        grid-template-columns: 1fr; /* Stack on mobile */
+        text-align: center;
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+    .profile-image-wrapper {
+        margin: 0 auto;
+    }
+    .profile-details h1 {
+        font-size: 2rem;
     }
 }

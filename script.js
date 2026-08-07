@@ -51,4 +51,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // --- 3. SMOOTH SCROLLING FOR ANCHOR LINKS ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            // Prevent the default jump-to-anchor behavior
+            e.preventDefault();
+
+            const href = this.getAttribute('href');
+
+            // Make sure it's not just a "#" link
+            if (href.length > 1) {
+                const targetElement = document.querySelector(href);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    });
 });
