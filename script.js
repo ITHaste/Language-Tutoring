@@ -140,4 +140,57 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- 6. PURCHASE VERIFICATION LOGIC (on schedule.html) ---
+    const verificationForm = document.getElementById('verificationForm');
+
+    if (verificationForm) {
+        const verificationStatus = document.getElementById('verificationStatus');
+        const verificationGate = document.getElementById('verificationGate');
+        const schedulingContent = document.getElementById('schedulingContent');
+
+        verificationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitButton = verificationForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Verifying...';
+
+            verificationStatus.style.display = 'none';
+            verificationStatus.className = 'form-status';
+
+            const transactionId = document.getElementById('transactionId').value;
+            console.log('Attempting to verify transaction ID:', transactionId);
+
+            try {
+                const response = await fetch('/api/verify-purchase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ transactionId: transactionId }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Success! Hide the gate and show the calendar.
+                    verificationGate.style.display = 'none';
+                    schedulingContent.style.display = 'block';
+                } else {
+                    verificationStatus.textContent = result.error || 'An unknown error occurred.';
+                    verificationStatus.classList.add('error');
+                    verificationStatus.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error('Verification request failed:', error);
+                verificationStatus.textContent = 'An unexpected error occurred. Please try again.';
+                verificationStatus.classList.add('error');
+                verificationStatus.style.display = 'block';
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+            }
+        });
+    }
 });

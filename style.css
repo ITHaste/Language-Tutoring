@@ -563,6 +563,52 @@ footer {
 }
 
 /* ==========================================================================
+   16. UTILITY PAGES (e.g., Schedule Page)
+   ========================================================================== */
+.utility-page-section {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+}
+
+.utility-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.utility-content h1 {
+    font-size: 2.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.utility-content .booking-note {
+    background-color: #eff6ff;
+    color: var(--text-muted);
+    padding: 1rem;
+    border-radius: var(--radius);
+    margin: 2rem 0;
+}
+
+.verification-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+    margin: 2rem auto;
+    text-align: left;
+}
+
+.verification-form input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+/* ==========================================================================
    15. RESPONSIVE & MOBILE
    ========================================================================== */
 .hamburger {
