@@ -1,4 +1,6 @@
 // Wait for the DOM (HTML layout) to fully load before running scripts
+
+console.log("Script loaded successfully!");
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. TUTOR FILTER LOGIC ---
