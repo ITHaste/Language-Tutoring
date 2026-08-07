@@ -13,11 +13,15 @@ export default async function handler(request, response) {
     try {
         const { name, email, message } = request.body;
 
+        // Log the incoming data for debugging in Vercel
+        console.log('Received submission:', { name, email });
+
         // Basic validation
         if (!name || !email || !message) {
             return response.status(400).json({ error: 'All fields are required.' });
         }
 
+        console.log('Attempting to send email via Resend...');
         // Send the email using Resend
         const { data, error } = await resend.emails.send({
             from: 'Polyglot Hub Contact Form <onboarding@resend.dev>', // The "from" address for testing
@@ -34,12 +38,15 @@ export default async function handler(request, response) {
         });
 
         if (error) {
+            // Log the detailed error from Resend to see what's wrong
+            console.error('Resend API Error:', JSON.stringify(error, null, 2));
             return response.status(400).json({ error: error.message });
         }
 
-        response.status(200).json({ message: 'Message sent successfully!' });
+        console.log('Email sent successfully! ID:', data.id);
+        response.status(200).json({ message: 'Message sent successfully!', id: data.id });
     } catch (error) {
         console.error('Server error:', error);
-        response.status(500).json({ error: 'Failed to send message.' });
+        response.status(500).json({ error: 'A server error occurred.' });
     }
 }
