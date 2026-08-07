@@ -149,9 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const verificationGate = document.getElementById('verificationGate');
         const schedulingContent = document.getElementById('schedulingContent');
 
-        verificationForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
+        // This is the core function that talks to our backend
+        const handleVerification = async (transactionId) => {
             const submitButton = verificationForm.querySelector('button[type="submit"]');
             const originalButtonText = submitButton.textContent;
             submitButton.disabled = true;
@@ -160,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
             verificationStatus.style.display = 'none';
             verificationStatus.className = 'form-status';
 
-            const transactionId = document.getElementById('transactionId').value;
             console.log('Attempting to verify transaction ID:', transactionId);
 
             try {
@@ -180,6 +178,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     verificationStatus.textContent = result.error || 'An unknown error occurred.';
                     verificationStatus.classList.add('error');
                     verificationStatus.style.display = 'block';
+
+                    // If verification fails, ensure the manual input form is visible
+                    const verificationLoading = document.getElementById('verificationLoading');
+                    const verificationInput = document.getElementById('verificationInput');
+                    if(verificationLoading) verificationLoading.style.display = 'none';
+                    if(verificationInput) verificationInput.style.display = 'block';
+                    if(verificationForm) verificationForm.style.display = 'flex';
                 }
 
             } catch (error) {
@@ -187,10 +192,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 verificationStatus.textContent = 'An unexpected error occurred. Please try again.';
                 verificationStatus.classList.add('error');
                 verificationStatus.style.display = 'block';
+
+                // Also show manual form on network error
+                const verificationLoading = document.getElementById('verificationLoading');
+                const verificationInput = document.getElementById('verificationInput');
+                if(verificationLoading) verificationLoading.style.display = 'none';
+                if(verificationInput) verificationInput.style.display = 'block';
+                if(verificationForm) verificationForm.style.display = 'flex';
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
             }
+        };
+
+        // Listen for manual form submission
+        verificationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const transactionId = document.getElementById('transactionId').value;
+            handleVerification(transactionId);
         });
+
+        // --- This is the new logic that runs automatically on page load ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const transactionIdFromUrl = urlParams.get('transactionId');
+
+        if (transactionIdFromUrl) {
+            // If an ID is in the URL, show the "Verifying..." message and hide the manual form
+            const verificationLoading = document.getElementById('verificationLoading');
+            const verificationInput = document.getElementById('verificationInput');
+            
+            if(verificationLoading) verificationLoading.style.display = 'block';
+            if(verificationInput) verificationInput.style.display = 'none';
+            if(verificationForm) verificationForm.style.display = 'none';
+
+            // Automatically trigger the verification
+            handleVerification(transactionIdFromUrl);
+        }
+        // If no ID is in the URL, the page will just show the manual input form by default.
     }
 });

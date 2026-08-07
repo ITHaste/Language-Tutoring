@@ -19,8 +19,15 @@
             <div class="utility-content">
                 <!-- Verification Gate -->
                 <div id="verificationGate">
-                    <h1>Verify Your Purchase</h1>
-                    <p>Please enter the Transaction ID from your Ko-fi confirmation page to unlock the scheduling calendar.</p>
+                    <div id="verificationLoading" style="display: none;">
+                        <h1>Verifying Your Purchase...</h1>
+                        <p>Please wait a moment while we confirm your transaction.</p>
+                        <!-- A spinner icon could be added here later -->
+                    </div>
+                    <div id="verificationInput">
+                        <h1>Verify Your Purchase</h1>
+                        <p>Please enter the Transaction ID from your Ko-fi confirmation page to unlock the scheduling calendar.</p>
+                    </div>
                     <form id="verificationForm" class="verification-form">
                         <input type="text" id="transactionId" placeholder="e.g., kofi12345" required>
                         <button type="submit" class="btn-primary">Verify & Schedule</button>
@@ -49,25 +56,6 @@
     <footer>
         <p>&copy; 2026 Polyglot Hub. All rights reserved.</p>
     </footer>
-    <script>
-        // This script runs before script.js to grab the transactionId from the URL
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const transactionIdFromUrl = urlParams.get('transactionId');
-
-            if (transactionIdFromUrl) {
-                // If a transaction ID is found in the URL, pre-fill the form and submit it automatically
-                const transactionIdInput = document.getElementById('transactionId');
-                if (transactionIdInput) {
-                    transactionIdInput.value = transactionIdFromUrl;
-                    const verificationForm = document.getElementById('verificationForm');
-                    if (verificationForm) {
-                        verificationForm.dispatchEvent(new Event('submit')); // Trigger form submission
-                    }
-                }
-            }
-        });
-    </script>
     <script src="script.js"></script>
 </body>
 </html>

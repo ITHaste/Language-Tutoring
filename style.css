@@ -608,6 +608,12 @@ footer {
     font-size: 1rem;
 }
 
+.verification-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px #bfdbfe;
+}
+
 /* ==========================================================================
    15. RESPONSIVE & MOBILE
    ========================================================================== */
