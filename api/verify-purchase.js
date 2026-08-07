@@ -24,6 +24,7 @@ export default async function handler(request, response) {
             await redis.del(transactionId);
             return response.status(200).json({ message: 'Verification successful.' });
         } else {
+            console.log(`Verification failed: Transaction ID "${transactionId}" not found in Redis.`);
             return response.status(404).json({ error: 'Invalid or expired transaction ID.' });
         }
     } catch (error) {

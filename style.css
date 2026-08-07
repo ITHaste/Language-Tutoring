@@ -614,6 +614,11 @@ footer {
     box-shadow: 0 0 0 2px #bfdbfe;
 }
 
+.calendar-embed {
+    margin-top: 2rem;
+    min-height: 700px; /* Ensure space for the calendar to load */
+}
+
 /* ==========================================================================
    15. RESPONSIVE & MOBILE
    ========================================================================== */
