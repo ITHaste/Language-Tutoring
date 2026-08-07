@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polyglot Hub — Language Tutoring</title>
+    <!-- We will link our CSS stylesheet here later -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. NAVIGATION BAR -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="#">Polyglot Hub</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#languages">Languages</a></li>
+                <li><a href="#tutors">Tutors</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact" class="btn-primary">Book a Trial</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 2. HERO BANNER -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Master Dutch, English, and Indonesian with Expert Tutors</h1>
+                <p>Personalized 1-on-1 language lessons tailored to your goals. Start speaking confidently from day one.</p>
+                <div class="hero-buttons">
+                    <a href="#tutors" class="btn-primary">Find a Tutor</a>
+                    <a href="#languages" class="btn-secondary">Explore Languages</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. LANGUAGES OFFERED -->
+        <section id="languages" class="languages-section">
+            <h2>Languages Offered</h2>
+            <p>Choose the language you want to master:</p>
+            
+            <div class="language-grid">
+                <!-- Dutch Card -->
+                <div class="lang-card">
+                    <span class="flag">🇳🇱</span>
+                    <h3>Dutch</h3>
+                    <p>Learn conversational Dutch, grammar, or prepare for integration exams.</p>
+                </div>
+
+                <!-- English Card -->
+                <div class="lang-card">
+                    <span class="flag">🇬🇧</span>
+                    <h3>English</h3>
+                    <p>Improve business communication, academic writing, or everyday fluency.</p>
+                </div>
+
+                <!-- Indonesian Card -->
+                <div class="lang-card">
+                    <span class="flag">🇮🇩</span>
+                    <h3>Indonesian</h3>
+                    <p>Master Bahasa Indonesia for travel, business, or everyday conversation.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. FEATURED TUTORS SECTION -->
+        <section id="tutors" class="tutors-section">
+            <h2>Featured Tutors</h2>
+            
+            <!-- Language Filter Buttons (We will hook JavaScript to these in Phase 3) -->
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Languages</button>
+                <button class="filter-btn" data-filter="dutch">Dutch</button>
+                <button class="filter-btn" data-filter="english">English</button>
+                <button class="filter-btn" data-filter="indonesian">Indonesian</button>
+            </div>
+
+            <div class="tutor-grid">
+                <!-- Tutor 1 -->
+                <article class="tutor-card" data-language="dutch english">
+                    <div class="tutor-info">
+                        <h3>Kevin van Dijken</h3>
+                        <p class="tutor-tag">Native Dutch Speaker</p>
+                        <p>Specializes in Dutch conversational practice. Also offers beginner to intermediate English lessons.</p>
+                        <button class="btn-secondary">Book Lesson</button>
+                    </div>
+                </article>
+
+                <!-- Tutor 2 -->
+                <article class="tutor-card" data-language="indonesian english">
+                    <div class="tutor-info">
+                        <h3>Calvina Risky Amelia</h3>
+                        <p class="tutor-tag">Native Indonesian Speaker</p>
+                        <p>Teaches Bahasa Indonesia for all levels. Also provides conversational English practice.</p>
+                        <button class="btn-secondary">Book Lesson</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- 5. FOOTER -->
+    <footer>
+        <p>&copy; 2026 Polyglot Hub. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
