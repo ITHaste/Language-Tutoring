@@ -227,7 +227,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Automatically trigger the verification
             handleVerification(transactionIdFromUrl);
+        } else {
+            // If no ID is in the URL, show the manual input form.
+            const verificationInput = document.getElementById('verificationInput');
+            if(verificationInput) verificationInput.style.display = 'block';
+            if(verificationForm) verificationForm.style.display = 'flex';
         }
-        // If no ID is in the URL, the page will just show the manual input form by default.
     }
 });

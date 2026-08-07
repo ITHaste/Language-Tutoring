@@ -2,6 +2,15 @@ import { kv } from '@vercel/kv';
 
 // This function is called by the schedule.html page to verify a transaction ID.
 export default async function handler(request, response) {
+    // --- DEBUGGING STEP ---
+    // Log the environment variables to see if they are available to the function.
+    console.log('--- KV Environment Variables Check ---');
+    console.log(`KV_URL: ${process.env.KV_URL ? 'SET' : 'MISSING'}`);
+    console.log(`KV_REST_API_URL: ${process.env.KV_REST_API_URL ? 'SET' : 'MISSING'}`);
+    console.log(`KV_REST_API_TOKEN: ${process.env.KV_REST_API_TOKEN ? 'SET' : 'MISSING'}`);
+    console.log('------------------------------------');
+    // --- END DEBUGGING STEP ---
+
     if (request.method !== 'POST') {
         return response.status(405).json({ error: 'Method Not Allowed' });
     }
