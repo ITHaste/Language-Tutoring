@@ -162,7 +162,7 @@ section > p {
 }
 
 /* CSS Grid for Language Cards */
-.language-grid, .tutor-grid, .pricing-grid {
+.language-grid, .tutor-grid, .pricing-grid, .steps-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
@@ -339,7 +339,135 @@ footer {
 
 
 /* ==========================================================================
-   10. ABOUT US SECTION
+   10. HOW IT WORKS SECTION
+   ========================================================================== */
+.how-it-works-section {
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.step {
+    text-align: center;
+    padding: 1rem;
+}
+
+.step-icon {
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.step h3 {
+    font-size: 1.25rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.step p {
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   11. FAQ SECTION
+   ========================================================================== */
+.faq-container {
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    overflow: hidden; /* Important for the transition */
+}
+
+.faq-question {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-align: left;
+    color: var(--secondary-color);
+}
+
+.faq-icon {
+    font-size: 1.5rem;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.faq-answer p {
+    padding: 0 1.25rem 1.25rem;
+    color: var(--text-muted);
+}
+
+/* Active state for FAQ item */
+.faq-item.active .faq-answer {
+    max-height: 200px; /* Adjust if answers are longer */
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(45deg);
+}
+
+/* ==========================================================================
+   12. CONTACT SECTION
+   ========================================================================== */
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+.contact-form button {
+    align-self: flex-start;
+}
+
+
+/* ==========================================================================
+   13. ABOUT US SECTION
    ========================================================================== */
 .about-content {
     display: grid;
@@ -370,7 +498,7 @@ footer {
 }
 
 /* ==========================================================================
-   11. TUTOR PROFILE PAGE
+   14. TUTOR PROFILE PAGE
    ========================================================================== */
 .profile-page-section {
     padding-top: 2rem; /* Less padding at the top */
@@ -415,11 +543,25 @@ footer {
 }
 
 /* ==========================================================================
-   12. RESPONSIVE & MOBILE
+   15. RESPONSIVE & MOBILE
    ========================================================================== */
 .hamburger {
     display: none; /* Hidden on desktop */
+    cursor: pointer;
+}
 
+.hamburger .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    background-color: var(--text-dark);
+    transition: all 0.3s ease-in-out;
+}
+
+@media screen and (max-width: 768px) {
+    .hamburger {
+        display: block;
     }
 
     .nav-links {
@@ -439,7 +581,7 @@ footer {
     }
 
     .nav-links.active {
-        max-height: 22rem; /* Adjust as needed for number of links */
+        max-height: 25rem; /* Adjust as needed for number of links */
         border-top: 1px solid var(--border-color);
         box-shadow: var(--shadow);
     }
@@ -512,5 +654,9 @@ footer {
     }
     .profile-details h1 {
         font-size: 2rem;
+    }
+
+    .contact-form button {
+        width: 100%;
     }
 }
