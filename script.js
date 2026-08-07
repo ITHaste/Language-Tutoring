@@ -88,4 +88,38 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // --- 5. CONTACT FORM SUBMISSION LOGIC ---
+    const contactForm = document.getElementById('contactForm');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message); // Or display a success message on the page
+                    contactForm.reset(); // Clear the form
+                } else {
+                    alert(`Error: ${result.message}`); // Or display an error message
+                }
+            } catch (error) {
+                console.error('Network error or API call failed:', error);
+                alert('An unexpected error occurred. Please try again later.');
+            }
+        });
+    }
 });

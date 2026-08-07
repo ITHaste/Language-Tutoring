@@ -542,6 +542,12 @@ footer {
     margin-bottom: 2.5rem;
 }
 
+.profile-booking-section .booking-note {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
 /* ==========================================================================
    15. RESPONSIVE & MOBILE
    ========================================================================== */
