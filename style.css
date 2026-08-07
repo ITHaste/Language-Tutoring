@@ -465,6 +465,20 @@ footer {
     align-self: flex-start;
 }
 
+.form-status {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    display: none; /* Hidden by default */
+}
+.form-status.success {
+    background-color: #dcfce7;
+    color: #166534;
+}
+.form-status.error {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
 
 /* ==========================================================================
    13. ABOUT US SECTION

@@ -91,10 +91,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 5. CONTACT FORM SUBMISSION LOGIC ---
     const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('formStatus');
 
-    if (contactForm) {
+    if (contactForm && formStatus) {
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault(); // Prevent default form submission
+
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+
+            // Clear previous status
+            formStatus.style.display = 'none';
+            formStatus.textContent = '';
+            formStatus.className = 'form-status';
 
             const formData = new FormData(contactForm);
             const data = Object.fromEntries(formData.entries());
@@ -102,23 +113,28 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch('/api/contact', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data),
                 });
 
                 const result = await response.json();
 
                 if (response.ok) {
-                    alert(result.message); // Or display a success message on the page
+                    formStatus.textContent = result.message;
+                    formStatus.classList.add('success');
                     contactForm.reset(); // Clear the form
                 } else {
-                    alert(`Error: ${result.message}`); // Or display an error message
+                    formStatus.textContent = result.error || 'An unknown error occurred.';
+                    formStatus.classList.add('error');
                 }
             } catch (error) {
                 console.error('Network error or API call failed:', error);
-                alert('An unexpected error occurred. Please try again later.');
+                formStatus.textContent = 'An unexpected error occurred. Please try again later.';
+                formStatus.classList.add('error');
+            } finally {
+                formStatus.style.display = 'block';
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
             }
         });
     }
