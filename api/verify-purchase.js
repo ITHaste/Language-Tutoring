@@ -6,13 +6,7 @@ export default async function handler(request, response) {
         return response.status(405).json({ error: 'Method Not Allowed' });
     }
 
-    const redis = createClient({
-        url: process.env.REDIS_URL,
-        socket: {
-            tls: true,
-            rejectUnauthorized: false
-        }
-    });
+    const redis = createClient({ url: process.env.REDIS_URL });
     await redis.connect();
 
     try {

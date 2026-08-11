@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { createClient } from 'redis';
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -13,6 +14,9 @@ export default async function handler(request, response) {
 
     const resend = new Resend(process.env.RESEND_API_KEY);
     const tutorEmail = process.env.TUTOR_EMAIL;
+
+    const redis = createClient({ url: process.env.REDIS_URL });
+    await redis.connect();
 
     try {
         const { email, selectedTime, tutor } = request.body;
@@ -52,5 +56,8 @@ export default async function handler(request, response) {
     } catch (error) {
         console.error('Error processing booking request:', error);
         return response.status(500).json({ error: 'An internal server error occurred.' });
+    } finally {
+        // Ensure the Redis client connection is closed
+        await redis.quit();
     }
 }
