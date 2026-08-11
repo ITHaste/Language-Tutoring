@@ -7,7 +7,7 @@ export default async function handler(request, response) {
     }
 
     // Check for required environment variables
-    if (!process.env.RESEND_API_KEY || !process.env.TUTOR_EMAIL) {
+    if (!process.env.RESEND_API_KEY || !process.env.TUTOR_EMAIL || !process.env.RESEND_FROM_EMAIL) {
         console.error('Missing RESEND_API_KEY, TUTOR_EMAIL, or RESEND_FROM_EMAIL environment variables.');
         return response.status(500).json({ error: 'Server configuration error. Please contact support.' });
     }
@@ -25,6 +25,19 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: 'Email, selected time, and tutor are required.' });
         }
 
+        // --- ATOMIC BOOKING LOGIC ---
+        // Create a unique key for the time slot.
+        const bookingKey = `booked_slot:${selectedTime}`;
+        // Try to set the key ONLY if it does not exist (NX: true).
+        // Set an expiration of 90 days (7776000 seconds) to keep the DB clean.
+        const result = await redis.set(bookingKey, email, { EX: 7776000, NX: true });
+
+        if (result === null) {
+            // The key already existed, so the slot is taken.
+            console.log(`Booking failed: Slot ${selectedTime} is already taken.`);
+            return response.status(409).json({ error: 'This time slot is no longer available. Please select another time.' });
+        }
+
         const bookingDate = new Date(selectedTime);
         const formattedDate = bookingDate.toLocaleString('en-US', {
             weekday: 'long',
@@ -40,7 +53,7 @@ export default async function handler(request, response) {
 
         // Send email to the tutor
         const { data, error } = await resend.emails.send({
-            from: 'Polyglot Hub Lesson Booking <onboarding@resend.dev>', // Must be a verified domain on Resend.
+            from: process.env.RESEND_FROM_EMAIL, // Must be a verified domain on Resend.
             to: [tutorEmail], // Your email address to receive notifications
             subject: `New Lesson Booking for ${tutorName}!`,
             html: `<h1>New Lesson Booking for ${tutorName}</h1><p>A student has requested a lesson at the following time:</p><ul><li><strong>Tutor:</strong> ${tutorName}</li><li><strong>Student Email:</strong> ${email}</li><li><strong>Requested Time:</strong> ${formattedDate}</li></ul><p>Please reach out to them to confirm and send a calendar invitation.</p>`,

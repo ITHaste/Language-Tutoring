@@ -76,13 +76,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const availableUTCHours = tutorSchedules[tutorName] || tutorSchedules['kevin'];
 
-        const renderCalendar = () => {
+        const renderCalendar = async () => {
             calendarGrid.innerHTML = '';
             const now = new Date();
             const today = new Date(currentDate);
             const dayOfWeek = today.getDay();
             const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
             const monday = new Date(today.setDate(today.getDate() + diffToMonday));
+
+            // --- NEW: Fetch booked slots for the current week ---
+            let bookedSlots = [];
+            try {
+                const response = await fetch(`/api/get-booked-slots?startOfWeek=${monday.toISOString()}&tutor=${tutorName}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    bookedSlots = data.bookedSlots || [];
+                } else {
+                    console.error('Failed to fetch booked slots');
+                }
+            } catch (error) {
+                console.error('Error fetching booked slots:', error);
+                // We can still render the calendar, just without availability info.
+            }
+            // --- END NEW ---
 
             const friday = new Date(monday);
             friday.setDate(monday.getDate() + 4);
@@ -117,9 +133,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     const time = new Date(Date.UTC(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate(), hourUTC, 0, 0));
                     timeSlot.textContent = time.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
                     timeSlot.dataset.datetime = time.toISOString();
+
                     if (time < now) {
                         timeSlot.disabled = true;
                         timeSlot.classList.add('is-past');
+                    } else if (bookedSlots.includes(time.toISOString())) {
+                        timeSlot.disabled = true;
+                        timeSlot.classList.add('is-booked');
+                        timeSlot.textContent = 'Booked';
                     }
                     timeSlotsContainer.appendChild(timeSlot);
                 }
@@ -128,16 +149,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        const changeWeek = (offset) => {
+        const changeWeek = async (offset) => {
             currentDate.setDate(currentDate.getDate() + offset * 7);
-            renderCalendar();
+            await renderCalendar();
         };
 
         prevWeekBtn.addEventListener('click', () => changeWeek(-1));
         nextWeekBtn.addEventListener('click', () => changeWeek(1));
 
         calendarGrid.addEventListener('click', (e) => {
-            const clickedSlot = e.target;
+            const clickedSlot = e.target.closest('.time-slot');
             if (clickedSlot.classList.contains('time-slot') && !clickedSlot.disabled) {
                 if (selectedTimeSlot) selectedTimeSlot.classList.remove('is-selected');
                 clickedSlot.classList.add('is-selected');
@@ -173,6 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     bookingStatus.className = 'form-status success';
                     bookingForm.style.display = 'none';
                 } else {
+                    // If a slot was taken, refresh the calendar to show the new availability
+                    if (response.status === 409) {
+                        await renderCalendar();
+                    }
                     throw new Error(result.error || 'An unknown error occurred.');
                 }
             } catch (error) {

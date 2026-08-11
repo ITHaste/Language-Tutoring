@@ -743,6 +743,15 @@ footer {
     text-decoration: line-through;
 }
 
+.time-slot.is-booked {
+    background-color: #f1f5f9; /* Same as past for consistency */
+    color: #94a3b8;
+    border-color: #e2e8f0;
+    cursor: not-allowed;
+    font-style: italic;
+    font-weight: 400;
+}
+
 .confirmation-container {
     margin-top: 2rem;
     padding: 1.5rem;
