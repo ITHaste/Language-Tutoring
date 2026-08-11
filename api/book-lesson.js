@@ -6,8 +6,8 @@ export default async function handler(request, response) {
     }
 
     // Check for required environment variables
-    if (!process.env.RESEND_API_KEY || !process.env.TUTOR_EMAIL) {
-        console.error('Missing RESEND_API_KEY or TUTOR_EMAIL environment variables.');
+    if (!process.env.RESEND_API_KEY || !process.env.TUTOR_EMAIL || !process.env.RESEND_FROM_EMAIL) {
+        console.error('Missing RESEND_API_KEY, TUTOR_EMAIL, or RESEND_FROM_EMAIL environment variables.');
         return response.status(500).json({ error: 'Server configuration error. Please contact support.' });
     }
 
@@ -36,8 +36,8 @@ export default async function handler(request, response) {
 
         // Send email to the tutor
         const { data, error } = await resend.emails.send({
-            from: 'Booking <booking@your-verified-domain.com>', // IMPORTANT: Replace with your verified domain from Resend.
-            to: [tutorEmail],
+            from: process.env.RESEND_FROM_EMAIL, // Must be a verified domain on Resend.
+            to: [tutorEmail], // Your email address to receive notifications
             subject: `New Lesson Booking for ${tutorName}!`,
             html: `<h1>New Lesson Booking for ${tutorName}</h1><p>A student has requested a lesson at the following time:</p><ul><li><strong>Tutor:</strong> ${tutorName}</li><li><strong>Student Email:</strong> ${email}</li><li><strong>Requested Time:</strong> ${formattedDate}</li></ul><p>Please reach out to them to confirm and send a calendar invitation.</p>`,
         });
