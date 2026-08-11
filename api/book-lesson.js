@@ -7,7 +7,7 @@ export default async function handler(request, response) {
     }
 
     // Check for required environment variables
-    if (!process.env.RESEND_API_KEY || !process.env.TUTOR_EMAIL {
+    if (!process.env.RESEND_API_KEY || !process.env.TUTOR_EMAIL) {
         console.error('Missing RESEND_API_KEY, TUTOR_EMAIL, or RESEND_FROM_EMAIL environment variables.');
         return response.status(500).json({ error: 'Server configuration error. Please contact support.' });
     }
