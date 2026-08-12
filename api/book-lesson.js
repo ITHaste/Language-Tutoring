@@ -49,17 +49,29 @@ export default async function handler(request, response) {
             return response.status(409).json({ error: 'This time slot is no longer available. Please select another time.' });
         }
 
+        // Determine the correct timezone for the tutor
         const bookingDate = new Date(selectedTime);
-        const formattedDate = bookingDate.toLocaleString('en-US', {
+        let tutorTimeZone;
+        if (tutor === 'kevin') {
+            tutorTimeZone = 'Europe/Amsterdam'; // Handles CET/CEST automatically
+        } else if (tutor === 'calvina') {
+            tutorTimeZone = 'Asia/Jakarta'; // UTC+7
+        } else {
+            // Fallback for unknown tutor, though this should be caught earlier
+            tutorTimeZone = 'UTC';
+        }
+
+        // Format the date for the tutor's local timezone
+        const formattedDateForTutor = bookingDate.toLocaleString('en-US', {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
             day: 'numeric',
             hour: 'numeric',
             minute: '2-digit',
-            timeZoneName: 'long',
+            timeZone: tutorTimeZone,
+            timeZoneName: 'short', // 'short' for "CEST", "WIB", etc.
         });
-
         const tutorName = tutor.charAt(0).toUpperCase() + tutor.slice(1);
 
         // Send email to the tutor
@@ -67,7 +79,7 @@ export default async function handler(request, response) {
             from: process.env.RESEND_FROM_EMAIL, // Must be a verified domain on Resend.
             to: [tutorEmail], // Your email address to receive notifications
             subject: `New Lesson Booking for ${tutorName}!`,
-            html: `<h1>New Lesson Booking for ${tutorName}</h1><p>A student has requested a lesson at the following time:</p><ul><li><strong>Tutor:</strong> ${tutorName}</li><li><strong>Student Email:</strong> ${email}</li><li><strong>Requested Time:</strong> ${formattedDate}</li></ul><p>Please reach out to them to confirm and send a calendar invitation.</p>`,
+            html: `<h1>New Lesson Booking for ${tutorName}</h1><p>A student has requested a lesson at the following time:</p><ul><li><strong>Tutor:</strong> ${tutorName}</li><li><strong>Student Email:</strong> ${email}</li><li><strong>Requested Time:</strong> ${formattedDateForTutor}</li></ul><p>Please reach out to them to confirm and send a calendar invitation.</p>`,
         });
 
         if (error) {
