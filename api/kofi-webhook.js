@@ -77,10 +77,10 @@ export default async function handler(request, response) {
                         // Don't fail the webhook for an email error, just log it. The purchase is still valid in Redis.
                     }
                 } else {
-                    console.warn(`Could not find tutor for Ko-fi shop item link code: ${linkCode}`);
+                    console.warn(`Ko-fi Webhook: Could not find tutor for shop item with link code: ${linkCode}. Transaction ID: ${transactionId}, Product: ${productName}`);
                 }
             } else {
-                console.warn('Ko-fi shop webhook received without transaction ID, email, or link code.');
+                console.warn(`Ko-fi Webhook: Missing critical data (transaction ID, email, or link code) in payload. Full data: ${JSON.stringify(kofiData)}`);
             }
         }
 
