@@ -27,7 +27,7 @@ export default async function handler(request, response) {
             return response.status(401).json({ error: 'Unauthorized' });
         }
 
-        if (kofiData.type === 'Shop' && kofiData.shop_items && kofiData.shop_items.length > 0) {
+        if ((kofiData.type === 'Shop' || kofiData.type === 'Shop Order') && kofiData.shop_items && kofiData.shop_items.length > 0) {
             const transactionId = kofiData.kofi_transaction_id;
             const buyerEmail = kofiData.email;
             const productName = kofiData.shop_items[0].item_name; // Get product name for better logging
