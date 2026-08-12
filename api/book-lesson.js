@@ -7,14 +7,13 @@ export default async function handler(request, response) {
     }
 
     // Check for required environment variables
-    if (!process.env.RESEND_API_KEY || !process.env.TUTOR_EMAIL || !process.env.RESEND_FROM_EMAIL) {
-        console.error('Missing RESEND_API_KEY, TUTOR_EMAIL, or RESEND_FROM_EMAIL environment variables.');
+    if (!process.env.RESEND_API_KEY || !process.env.RESEND_FROM_EMAIL || !process.env.KEVIN_TUTOR_EMAIL || !process.env.CALVINA_TUTOR_EMAIL) {
+        console.error('Server configuration error: Missing one or more required environment variables for email notifications.');
         return response.status(500).json({ error: 'Server configuration error. Please contact support.' });
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const tutorEmail = process.env.TUTOR_EMAIL;
-
+    
     const redis = createClient({ url: process.env.REDIS_URL });
     await redis.connect();
 
@@ -23,6 +22,18 @@ export default async function handler(request, response) {
 
         if (!email || !selectedTime || !tutor) {
             return response.status(400).json({ error: 'Email, selected time, and tutor are required.' });
+        }
+
+        // --- Select the correct tutor email based on the 'tutor' parameter ---
+        let tutorEmail;
+        if (tutor === 'kevin') {
+            tutorEmail = process.env.KEVIN_TUTOR_EMAIL;
+        } else if (tutor === 'calvina') {
+            tutorEmail = process.env.CALVINA_TUTOR_EMAIL;
+        } else {
+            // This case should ideally not be reached if the frontend is correct.
+            console.error(`Invalid tutor specified during booking: ${tutor}`);
+            return response.status(400).json({ error: 'Invalid tutor specified.' });
         }
 
         // --- ATOMIC BOOKING LOGIC ---

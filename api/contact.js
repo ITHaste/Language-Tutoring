@@ -24,7 +24,7 @@ export default async function handler(request, response) {
         console.log('Attempting to send email via Resend...');
         // Send the email using Resend
         const { data, error } = await resend.emails.send({
-            from: 'Polyglot Hub Contact Form <onboarding@resend.dev>', // The "from" address for testing
+            from: 'Polyglot Hub Contact Form <contact@thepolyglothub.com>', // The "from" address for testing
             to: ['djkevin3107@gmail.com'], // <-- IMPORTANT: Change this to your actual email address
             subject: `New Message from ${name} on Polyglot Hub`,
             reply_to: email, // Set the user's email as the reply-to address
