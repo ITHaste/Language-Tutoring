@@ -590,6 +590,17 @@ footer {
     margin: 2rem 0;
 }
 
+.utility-content .booking-note p {
+    margin-bottom: 0.5rem;
+}
+
+.utility-content .booking-note code {
+    background-color: #e2e8f0;
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
 #schedulingContent {
     /* This ensures the calendar and its headers are left-aligned after verification */
     text-align: left;

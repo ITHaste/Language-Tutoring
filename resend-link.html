@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resend Scheduling Link - Polyglot Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- NAVIGATION BAR -->
+    <header>
+        <nav class="navbar">
+            <div class="logo"><a href="index.html">Polyglot Hub</a></div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="utility-page-section">
+            <div class="utility-content">
+                <h1>Resend Scheduling Link</h1>
+                <p>If you did not receive the email with your scheduling link, please enter your <strong>Ko-fi Transaction ID</strong> below to have it sent again.</p>
+                <div class="booking-note">
+                    <p>You can find your Transaction ID on your Ko-fi receipt email. It is a long, unique code.</p>
+                    <p>Example: <code>a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6</code></p>
+                    <p>As the site owner, you can also find this ID in your Ko-fi dashboard under "Payments" for the specific purchase.</p>
+                </div>
+                
+                <form id="resendForm" class="verification-form">
+                    <input type="text" id="transactionId" placeholder="Enter your Ko-fi Transaction ID" required>
+                    <button type="submit" class="btn-primary">Resend Email</button>
+                    <div id="resendStatus" class="form-status"></div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Polyglot Hub. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resendForm = document.getElementById('resendForm');
+            const resendStatus = document.getElementById('resendStatus');
+
+            if (resendForm) {
+                resendForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const transactionId = document.getElementById('transactionId').value;
+                    const submitButton = resendForm.querySelector('button[type="submit"]');
+                    const originalButtonText = submitButton.textContent;
+
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Sending...';
+                    resendStatus.style.display = 'none';
+                    resendStatus.className = 'form-status';
+
+                    try {
+                        const response = await fetch('/api/resend-link', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ transactionId }),
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            resendStatus.textContent = result.message;
+                            resendStatus.classList.add('success');
+                        } else {
+                            throw new Error(result.error || 'An unknown error occurred.');
+                        }
+                    } catch (error) {
+                        resendStatus.textContent = error.message;
+                        resendStatus.classList.add('error');
+                    } finally {
+                        resendStatus.style.display = 'block';
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalButtonText;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
