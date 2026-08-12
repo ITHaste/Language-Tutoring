@@ -59,12 +59,11 @@ export default async function handler(request, response) {
                             from: process.env.RESEND_FROM_EMAIL,
                             to: [buyerEmail],
                             subject: 'Your Lesson is Ready to be Scheduled!',
-                            html: `<h1>Thank you for your purchase!</h1>
-                                   <p>You can schedule your lesson with ${tutorName.charAt(0).toUpperCase() + tutorName.slice(1)} by clicking the link below:</p>
+                            html: `<h1>Thank you for your purchase!</h1><p>You can schedule your lesson with ${tutorName.charAt(0).toUpperCase() + tutorName.slice(1)} by clicking the link below. After you schedule, your tutor will send a Google Meet invitation to your email.</p>
                                    <p><a href="${scheduleUrl}">Schedule Your Lesson</a></p>
                                    <p>This link is valid for 90 days and can only be used once.</p>
                                    <p>If you have any questions, please reply to this email.</p>
-                                   <p>Thank you,<br>The Polyglot Hub</p>`
+                                   <p>Thank you,<br>The Polyglot Hub</p>`,
                         });
                         console.log(`Successfully sent scheduling email to ${buyerEmail} for tutor ${tutorName}.`);
                     } catch (emailError) {

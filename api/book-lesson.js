@@ -79,7 +79,7 @@ export default async function handler(request, response) {
             from: process.env.RESEND_FROM_EMAIL, // Must be a verified domain on Resend.
             to: [tutorEmail], // Your email address to receive notifications
             subject: `New Lesson Booking for ${tutorName}!`,
-            html: `<h1>New Lesson Booking for ${tutorName}</h1><p>A student has requested a lesson at the following time:</p><ul><li><strong>Tutor:</strong> ${tutorName}</li><li><strong>Student Email:</strong> ${email}</li><li><strong>Requested Time:</strong> ${formattedDateForTutor}</li></ul><p>Please reach out to them to confirm and send a calendar invitation.</p>`,
+            html: `<h1>New Lesson Booking for ${tutorName}</h1><p>A student has requested a lesson at the following time:</p><ul><li><strong>Tutor:</strong> ${tutorName}</li><li><strong>Student Email:</strong> ${email}</li><li><strong>Requested Time:</strong> ${formattedDateForTutor}</li></ul><p>Please reach out to them to confirm and send a Google Meet calendar invitation.</p>`,
         });
 
         if (error) {
@@ -87,7 +87,7 @@ export default async function handler(request, response) {
             return response.status(500).json({ error: 'Failed to send booking notification.' });
         }
 
-        return response.status(200).json({ message: 'Booking successful! Your tutor has been notified and will send you a meeting invitation shortly.' });
+        return response.status(200).json({ message: 'Booking successful! Your tutor has been notified and will send you a Google Meet invitation shortly.' });
 
     } catch (error) {
         console.error('Error processing booking request:', error);

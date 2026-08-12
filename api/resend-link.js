@@ -47,11 +47,11 @@ export default async function handler(request, response) {
             to: [email],
             subject: 'Your Lesson Scheduling Link (Resent)',
             html: `<h1>Here is your scheduling link!</h1>
-                   <p>As requested, we are resending the link to schedule your lesson with ${tutorName}:</p>
+                   <p>As requested, we are resending the link to schedule your lesson with ${tutorName}. After you schedule, your tutor will send a Google Meet invitation to your email.</p>
                    <p><a href="${scheduleUrl}">Schedule Your Lesson</a></p>
                    <p>This link is valid for 90 days from purchase and can only be used once.</p>
                    <p>If you have any questions, please reply to this email.</p>
-                   <p>Thank you,<br>The Polyglot Hub</p>`
+                   <p>Thank you,<br>The Polyglot Hub</p>`,
         });
 
         console.log(`Successfully resent scheduling email to ${email} for transaction ${transactionId}.`);

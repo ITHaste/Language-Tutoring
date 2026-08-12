@@ -29,15 +29,14 @@
         <section class="utility-page-section">
             <div class="utility-content">
                 <h1>Resend Scheduling Link</h1>
-                <p>If you did not receive the email with your scheduling link, please enter your <strong>Ko-fi Transaction ID</strong> below to have it sent again.</p>
+                <p>If you can't find the email with your scheduling link, please enter your <strong>Ko-fi Transaction ID</strong> below to have it sent again.</p>
                 <div class="booking-note">
-                    <p>You can find your Transaction ID on your Ko-fi receipt email. It is a long, unique code.</p>
+                    <p>You can find your Transaction ID on your <strong>Ko-fi receipt email</strong>. It is a long, unique code.</p>
                     <p>Example: <code>a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6</code></p>
-                    <p>As the site owner, you can also find this ID in your Ko-fi dashboard under "Payments" for the specific purchase.</p>
                 </div>
                 
                 <form id="resendForm" class="verification-form">
-                    <input type="text" id="transactionId" placeholder="Enter your Ko-fi Transaction ID" required>
+                    <input type="text" id="transactionId" placeholder="Enter Ko-fi Transaction ID" required>
                     <button type="submit" class="btn-primary">Resend Email</button>
                     <div id="resendStatus" class="form-status"></div>
                 </form>
