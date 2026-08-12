@@ -10,6 +10,11 @@ export default async function handler(request, response) {
         return response.status(405).json({ error: 'Method Not Allowed' });
     }
 
+    // Check for required environment variables
+    if (!process.env.RESEND_API_KEY || !process.env.RESEND_FROM_EMAIL) {
+        console.error('Server configuration error: Missing RESEND_API_KEY or RESEND_FROM_EMAIL environment variables.');
+        return response.status(500).json({ error: 'Server configuration error. Please contact support.' });
+    }
     try {
         const { name, email, message } = request.body;
 
@@ -24,8 +29,8 @@ export default async function handler(request, response) {
         console.log('Attempting to send email via Resend...');
         // Send the email using Resend
         const { data, error } = await resend.emails.send({
-            from: 'Polyglot Hub Contact Form <contact@thepolyglothub.com>', // The "from" address for testing
-            to: ['djkevin3107@gmail.com'], // <-- IMPORTANT: Change this to your actual email address
+            from: process.env.RESEND_FROM_EMAIL, // Use the configured "from" email for consistency
+            to: ['contact@thepolyglothub.com'], // Send to your official contact email
             subject: `New Message from ${name} on Polyglot Hub`,
             reply_to: email, // Set the user's email as the reply-to address
             html: `
