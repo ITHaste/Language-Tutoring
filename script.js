@@ -3,7 +3,30 @@
 console.log("Script loaded successfully!");
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. TUTOR FILTER LOGIC ---
+    // --- 1. THEME TOGGLE LOGIC ---
+    const themeToggle = document.getElementById('theme-toggle');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function applyTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+
+    // Apply saved theme on load or default to system preference
+    const savedTheme = localStorage.getItem('theme');
+    applyTheme(savedTheme || (prefersDarkScheme.matches ? 'dark' : 'light'));
+
+    // --- 2. TUTOR FILTER LOGIC ---
     const filterButtons = document.querySelectorAll('.filter-btn');
     const tutorCards = document.querySelectorAll('.tutor-card');
 
@@ -34,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. RESPONSIVE NAVIGATION LOGIC ---
+    // --- 3. RESPONSIVE NAVIGATION LOGIC ---
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-links');
 
@@ -54,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 3. SMOOTH SCROLLING FOR ANCHOR LINKS ---
+    // --- 4. SMOOTH SCROLLING FOR ANCHOR LINKS ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             // Prevent the default jump-to-anchor behavior
@@ -72,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 4. FAQ ACCORDION LOGIC ---
+    // --- 5. FAQ ACCORDION LOGIC ---
     const faqItems = document.querySelectorAll('.faq-item');
 
     if (faqItems.length > 0) {
@@ -91,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 5. CONTACT FORM SUBMISSION LOGIC ---
+    // --- 6. CONTACT FORM SUBMISSION LOGIC ---
     const contactForm = document.getElementById('contactForm');
     const formStatus = document.getElementById('formStatus');
 
