@@ -52,7 +52,7 @@ export default async function handler(request, response) {
                     const purchaseDetails = JSON.stringify({ tutor: tutorName, email: buyerEmail });
                     await redis.set(transactionId, purchaseDetails, { EX: 3600 * 24 * 90 });
 
-                    const scheduleUrl = `https://language-tutoring-liard.vercel.app/schedule.html?tutor=${tutorName}&transactionId=${transactionId}`;
+                    const scheduleUrl = `https://language-tutoring-liard.vercel.app/schedule?tutor=${tutorName}&transactionId=${transactionId}`;
                     
                     try {
                         await resend.emails.send({

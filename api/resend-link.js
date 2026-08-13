@@ -39,7 +39,7 @@ export default async function handler(request, response) {
             return response.status(500).json({ error: 'Could not retrieve purchase details. Please contact support.' });
         }
 
-        const scheduleUrl = `https://language-tutoring-liard.vercel.app/schedule.html?tutor=${tutor}&transactionId=${transactionId}`;
+        const scheduleUrl = `https://language-tutoring-liard.vercel.app/schedule?tutor=${tutor}&transactionId=${transactionId}`;
 
         // Resend the email
         await resend.emails.send({
