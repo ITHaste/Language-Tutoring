@@ -80,24 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 4. SMOOTH SCROLLING FOR ANCHOR LINKS ---
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            // Prevent the default jump-to-anchor behavior
-            e.preventDefault();
-
-            const href = this.getAttribute('href');
-
-            // Make sure it's not just a "#" link
-            if (href.length > 1) {
-                const targetElement = document.querySelector(href);
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-        });
-    });
-
     // --- 5. FAQ ACCORDION LOGIC ---
     const faqItems = document.querySelectorAll('.faq-item');
 
@@ -183,22 +165,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const h3 = pricingCard.querySelector('h3');
                 if (h3) productName = h3.textContent.trim();
             }
-            
             let tutorName = 'Unknown Tutor';
             if (h1) {
                 // Extracts the first name from "Kevin van Dijken"
                 tutorName = h1.textContent.trim().split(' ')[0];
             }
-
             const platform = isKofi ? 'Ko-fi' : (isTrakteer ? 'Trakteer' : 'Unknown');
-            const eventName = `${platform} Redirect`;
 
-            // Log the click event to the console for debugging instead of Vercel Analytics
-            console.log(`Tracking Event: '${eventName}'`, { product: productName, tutor: tutorName });
+            // Log the click event to the console for debugging.
+            console.log(`Redirecting to ${platform}:`, { product: productName, tutor: tutorName, url: button.href });
 
             // Navigate to the payment page after a short delay to ensure the log is captured.
-            const url = button.href;
-            setTimeout(() => { window.location.href = url; }, 300);
+            setTimeout(() => { window.location.href = button.href; }, 300);
         });
     });
 });
