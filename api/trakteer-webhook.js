@@ -66,7 +66,7 @@ export default async function handler(request, response) {
         // IMPORTANT: The payload structure below is an assumption based on common patterns.
         // You MUST check Trakteer's documentation and adjust field names like `order_id`, `items`, etc.
         if (trakteerData.type === 'treat' && trakteerData.items && trakteerData.items.length > 0) {
-            const transactionId = trakteerData.order_id;
+            const transactionId = trakteerData.transaction_id; // Changed from order_id based on test payload
             const buyerEmail = trakteerData.email;
             const firstItem = trakteerData.items[0];
             const itemId = firstItem.item_id;
@@ -112,7 +112,7 @@ export default async function handler(request, response) {
                     console.warn(`Trakteer Webhook: Could not find tutor for item ID: ${itemId}. Order ID: ${transactionId}, Item Name: ${itemName}`);
                 }
             } else {
-                console.warn(`Trakteer Webhook: Missing critical data (order_id, email, or item_id) in payload. Full data: ${JSON.stringify(trakteerData)}`);
+                console.warn(`Trakteer Webhook: Missing critical data (transaction_id, email, or item_id) in payload. Full data: ${JSON.stringify(trakteerData)}`);
             }
         }
 
