@@ -167,34 +167,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 7. DYNAMIC KO-FI REDIRECTS ---
-    // This ensures that after a purchase, the user is redirected back to the
-    // correct deployment (production or preview), not always production.
-    document.querySelectorAll('a.purchase-btn[href^="https://ko-fi.com"]').forEach(link => {
-        try {
-            const kofiUrl = new URL(link.href);
-            const redirectParam = kofiUrl.searchParams.get('redirect');
+    // --- 7. PAYMENT LINK HANDLING (REDIRECTS & ANALYTICS) ---
+    document.querySelectorAll('a.purchase-btn[href*="ko-fi.com"], a.purchase-btn[href*="trakteer.id"]').forEach(button => {
+        const isKofi = button.href.includes('ko-fi.com');
+        const isTrakteer = button.href.includes('trakteer.id');
 
-            if (redirectParam) {
-                const redirectUrl = new URL(redirectParam);
-                // Replace the origin of the redirect URL with the current site's origin
-                redirectUrl.origin = window.location.origin;
-                // Set the new redirect URL back into the Ko-fi link's parameters
-                kofiUrl.searchParams.set('redirect', redirectUrl.toString());
-                // Update the link's href attribute
-                link.href = kofiUrl.toString();
+        // --- DYNAMIC REDIRECT LOGIC (for Ko-fi links) ---
+        if (isKofi) {
+            try {
+                const kofiUrl = new URL(button.href);
+                const redirectParam = kofiUrl.searchParams.get('redirect');
+
+                if (redirectParam) {
+                    const redirectUrl = new URL(redirectParam);
+                    redirectUrl.origin = window.location.origin;
+                    kofiUrl.searchParams.set('redirect', redirectUrl.toString());
+                    button.href = kofiUrl.toString();
+                }
+            } catch (error) {
+                console.error('Failed to update Ko-fi redirect URL:', error, button.href);
             }
-        } catch (error) {
-            console.error('Failed to update Ko-fi redirect URL:', error, link.href);
         }
-    });
 
-    // --- 8. ANALYTICS CLICK TRACKING ---
-    // This will track clicks on Ko-fi purchase buttons for analytics.
-    document.querySelectorAll('a.purchase-btn[href^="https://ko-fi.com"]').forEach(button => {
+        // --- ANALYTICS CLICK TRACKING (for both Ko-fi and Trakteer) ---
         button.addEventListener('click', (e) => {
             // Prevent the default navigation to allow time for tracking.
             e.preventDefault();
+
             const pricingCard = button.closest('.pricing-card');
             const h1 = document.querySelector('h1');
             let productName = 'Unknown Product';
@@ -202,17 +201,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 const h3 = pricingCard.querySelector('h3');
                 if (h3) productName = h3.textContent.trim();
             }
+
             let tutorName = 'Unknown Tutor';
             if (h1) {
                 // Extracts the first name from "Kevin van Dijken"
                 tutorName = h1.textContent.trim().split(' ')[0];
             }
-            // Log to Vercel Analytics using the va() queue function for robustness.
+
+            const platform = isKofi ? 'Ko-fi' : (isTrakteer ? 'Trakteer' : 'Unknown');
+            const eventName = `${platform} Redirect`;
+
             if (window.va && typeof window.va === 'function') {
-                window.va('track', 'Ko-fi Redirect', { product: productName, tutor: tutorName });
+                window.va('track', eventName, { product: productName, tutor: tutorName });
             }
+
             // Navigate to the Ko-fi page after a short delay to ensure the event is sent.
-            const url = button.getAttribute('href');
+            const url = button.href;
             setTimeout(() => { window.location.href = url; }, 300);
         });
     });
