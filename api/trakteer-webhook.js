@@ -26,8 +26,9 @@ export default async function handler(request, response) {
         await redis.connect();
         console.log('Trakteer Webhook received raw body:', request.body);
 
-        // Trakteer likely sends the payload directly in the body.
-        const trakteerData = request.body;
+        // Webhook providers like Trakteer and Ko-fi often send data as a form-urlencoded body
+        // with the JSON payload nested inside a `data` field. We need to parse this JSON string.
+        const trakteerData = JSON.parse(request.body.data);
 
         // 1. VERIFY THE WEBHOOK
         // IMPORTANT: Trakteer might send the token in headers (e.g., 'X-Trakteer-Token').
@@ -94,7 +95,7 @@ export default async function handler(request, response) {
 
     } catch (error) {
         console.error('Error processing Trakteer webhook:', error);
-        response.status(200).json({ error: 'Failed to process webhook due to an internal error.' });
+        response.status(500).json({ error: 'Failed to process webhook due to an internal error.' });
     } finally {
         if (redis.isOpen) {
             await redis.quit();
