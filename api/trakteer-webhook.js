@@ -24,11 +24,35 @@ export default async function handler(request, response) {
 
     try {
         await redis.connect();
-        console.log('Trakteer Webhook received raw body:', request.body);
+        console.log('--- TRAKTEER WEBHOOK RECEIVED ---');
+        console.log('HEADERS:', JSON.stringify(request.headers, null, 2));
+        console.log('RAW BODY:', JSON.stringify(request.body, null, 2));
 
-        // Webhook providers like Trakteer and Ko-fi often send data as a form-urlencoded body
-        // with the JSON payload nested inside a `data` field. We need to parse this JSON string.
-        const trakteerData = JSON.parse(request.body.data);
+        let trakteerData;
+
+        // Scenario 1: Vercel has already parsed the JSON body because Content-Type was application/json.
+        if (typeof request.body === 'object' && request.body !== null && !request.body.data) {
+            console.log('Interpreting body as pre-parsed JSON.');
+            trakteerData = request.body;
+        } 
+        // Scenario 2: Body is form-urlencoded, with a 'data' field (like Ko-fi).
+        else if (request.body && typeof request.body.data === 'string') {
+            console.log("Interpreting body as form-urlencoded with a 'data' field.");
+            try {
+                trakteerData = JSON.parse(request.body.data);
+            } catch (e) {
+                console.error('Failed to parse request.body.data JSON string:', e);
+                console.error('request.body.data was:', request.body.data);
+                return response.status(400).json({ error: 'Invalid JSON in data field.' });
+            }
+        } 
+        // Fallback for other unexpected formats
+        else {
+            console.error('Unrecognized webhook body format. Could not find data to process.');
+            return response.status(400).json({ error: 'Unrecognized body format.' });
+        }
+
+        console.log('PARSED TRAKTEER DATA:', JSON.stringify(trakteerData, null, 2));
 
         // 1. VERIFY THE WEBHOOK
         // IMPORTANT: Trakteer might send the token in headers (e.g., 'X-Trakteer-Token').
@@ -70,8 +94,9 @@ export default async function handler(request, response) {
                     const purchaseDetails = JSON.stringify({ tutor: tutorName, email: buyerEmail });
                     await redis.set(transactionId, purchaseDetails, { EX: 3600 * 24 * 90 });
 
-                    const scheduleUrl = `https://language-tutoring-liard.vercel.app/schedule?tutor=${tutorName}&transactionId=${transactionId}`;
-                    
+                    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+                    const scheduleUrl = `${baseUrl}/schedule?tutor=${tutorName}&transactionId=${transactionId}`;
+
                     try {
                         await resend.emails.send({
                             from: process.env.RESEND_FROM_EMAIL,
@@ -95,7 +120,7 @@ export default async function handler(request, response) {
 
     } catch (error) {
         console.error('Error processing Trakteer webhook:', error);
-        response.status(500).json({ error: 'Failed to process webhook due to an internal error.' });
+        return response.status(500).json({ error: 'Failed to process webhook due to an internal error.' });
     } finally {
         if (redis.isOpen) {
             await redis.quit();

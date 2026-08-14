@@ -52,8 +52,9 @@ export default async function handler(request, response) {
                     const purchaseDetails = JSON.stringify({ tutor: tutorName, email: buyerEmail });
                     await redis.set(transactionId, purchaseDetails, { EX: 3600 * 24 * 90 });
 
-                    const scheduleUrl = `https://language-tutoring-liard.vercel.app/schedule?tutor=${tutorName}&transactionId=${transactionId}`;
-                    
+                    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+                    const scheduleUrl = `${baseUrl}/schedule?tutor=${tutorName}&transactionId=${transactionId}`;
+
                     try {
                         await resend.emails.send({
                             from: process.env.RESEND_FROM_EMAIL,
