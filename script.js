@@ -167,32 +167,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 7. PAYMENT LINK HANDLING (REDIRECTS & ANALYTICS) ---
+    // --- 7. PAYMENT LINK CLICK TRACKING ---
     document.querySelectorAll('a.purchase-btn[href*="ko-fi.com"], a.purchase-btn[href*="trakteer.id"]').forEach(button => {
-        const isKofi = button.href.includes('ko-fi.com');
-        const isTrakteer = button.href.includes('trakteer.id');
-
-        // --- DYNAMIC REDIRECT LOGIC (for Ko-fi links) ---
-        if (isKofi) {
-            try {
-                const kofiUrl = new URL(button.href);
-                const redirectParam = kofiUrl.searchParams.get('redirect');
-
-                if (redirectParam) {
-                    const redirectUrl = new URL(redirectParam);
-                    redirectUrl.origin = window.location.origin;
-                    kofiUrl.searchParams.set('redirect', redirectUrl.toString());
-                    button.href = kofiUrl.toString();
-                }
-            } catch (error) {
-                console.error('Failed to update Ko-fi redirect URL:', error, button.href);
-            }
-        }
-
-        // --- ANALYTICS CLICK TRACKING (for both Ko-fi and Trakteer) ---
         button.addEventListener('click', (e) => {
             // Prevent the default navigation to allow time for tracking.
             e.preventDefault();
+
+            const isKofi = button.href.includes('ko-fi.com');
+            const isTrakteer = button.href.includes('trakteer.id');
 
             const pricingCard = button.closest('.pricing-card');
             const h1 = document.querySelector('h1');
@@ -201,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const h3 = pricingCard.querySelector('h3');
                 if (h3) productName = h3.textContent.trim();
             }
-
+            
             let tutorName = 'Unknown Tutor';
             if (h1) {
                 // Extracts the first name from "Kevin van Dijken"
@@ -211,11 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const platform = isKofi ? 'Ko-fi' : (isTrakteer ? 'Trakteer' : 'Unknown');
             const eventName = `${platform} Redirect`;
 
-            if (window.va && typeof window.va === 'function') {
-                window.va('track', eventName, { product: productName, tutor: tutorName });
-            }
+            // Log the click event to the console for debugging instead of Vercel Analytics
+            console.log(`Tracking Event: '${eventName}'`, { product: productName, tutor: tutorName });
 
-            // Navigate to the Ko-fi page after a short delay to ensure the event is sent.
+            // Navigate to the payment page after a short delay to ensure the log is captured.
             const url = button.href;
             setTimeout(() => { window.location.href = url; }, 300);
         });
