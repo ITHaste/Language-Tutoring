@@ -150,7 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 7. PAYMENT LINK CLICK TRACKING ---
-    document.querySelectorAll('a.purchase-btn[href*="ko-fi.com"], a.purchase-btn[href*="trakteer.id"]').forEach(button => {
+    const purchaseButtons = document.querySelectorAll('a.purchase-btn[href*="ko-fi.com"], a.purchase-btn[href*="trakteer.id"]');
+
+    purchaseButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             // Prevent the default navigation to allow time for tracking.
             e.preventDefault();
@@ -165,18 +167,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const h3 = pricingCard.querySelector('h3');
                 if (h3) productName = h3.textContent.trim();
             }
-            let tutorName = 'Unknown Tutor';
-            if (h1) {
-                // Extracts the first name from "Kevin van Dijken"
-                tutorName = h1.textContent.trim().split(' ')[0];
-            }
+            const tutorName = h1 ? h1.textContent.trim().split(' ')[0] : 'Unknown Tutor';
             const platform = isKofi ? 'Ko-fi' : (isTrakteer ? 'Trakteer' : 'Unknown');
 
-            // Log the click event to the console for debugging.
-            console.log(`Redirecting to ${platform}:`, { product: productName, tutor: tutorName, url: button.href });
+            // Log the event to the backend (Vercel Logs) without delaying navigation.
+            fetch('/api/log-payment-redirect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ platform, product: productName, tutor: tutorName }),
+                keepalive: true,
+            }).catch(err => console.error('Failed to log payment redirect:', err));
 
-            // Navigate to the payment page after a short delay to ensure the log is captured.
-            setTimeout(() => { window.location.href = button.href; }, 300);
+            // Navigate to the payment page
+            window.location.href = button.href;
         });
     });
 });
