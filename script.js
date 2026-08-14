@@ -166,4 +166,39 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- 7. KO-FI CLICK TRACKING ---
+    // This will track clicks on Ko-fi purchase buttons for analytics.
+    document.querySelectorAll('a.purchase-btn[href^="https://ko-fi.com"]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Prevent the default navigation to allow time for tracking.
+            e.preventDefault();
+
+            const pricingCard = button.closest('.pricing-card');
+            const h1 = document.querySelector('h1');
+            
+            let productName = 'Unknown Product';
+            if (pricingCard) {
+                const h3 = pricingCard.querySelector('h3');
+                if (h3) {
+                    productName = h3.textContent.trim();
+                }
+            }
+
+            let tutorName = 'Unknown Tutor';
+            if (h1) {
+                // Extracts the first name from "Kevin van Dijken"
+                tutorName = h1.textContent.trim().split(' ')[0];
+            }
+
+            // Log to Vercel Analytics if available
+            if (window.vercel && typeof window.vercel.track === 'function') {
+                window.vercel.track('Ko-fi Redirect', { product: productName, tutor: tutorName });
+            }
+
+            // Navigate to the Ko-fi page after a short delay to ensure the event is sent.
+            const url = button.getAttribute('href');
+            setTimeout(() => { window.location.href = url; }, 300);
+        });
+    });
 });
