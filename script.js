@@ -148,38 +148,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // --- 7. PAYMENT LINK CLICK TRACKING ---
-    const purchaseButtons = document.querySelectorAll('a.purchase-btn[href*="ko-fi.com"], a.purchase-btn[href*="trakteer.id"]');
-
-    purchaseButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            // Prevent the default navigation to allow time for tracking.
-            e.preventDefault();
-
-            const isKofi = button.href.includes('ko-fi.com');
-            const isTrakteer = button.href.includes('trakteer.id');
-
-            const pricingCard = button.closest('.pricing-card');
-            const h1 = document.querySelector('h1');
-            let productName = 'Unknown Product';
-            if (pricingCard) {
-                const h3 = pricingCard.querySelector('h3');
-                if (h3) productName = h3.textContent.trim();
-            }
-            const tutorName = h1 ? h1.textContent.trim().split(' ')[0] : 'Unknown Tutor';
-            const platform = isKofi ? 'Ko-fi' : (isTrakteer ? 'Trakteer' : 'Unknown');
-
-            // Log the event to the backend (Vercel Logs) without delaying navigation.
-            fetch('/api/log-payment-redirect', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ platform, product: productName, tutor: tutorName }),
-                keepalive: true,
-            }).catch(err => console.error('Failed to log payment redirect:', err));
-
-            // Navigate to the payment page
-            window.location.href = button.href;
-        });
-    });
 });
