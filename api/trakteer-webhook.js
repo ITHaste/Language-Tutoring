@@ -55,10 +55,10 @@ export default async function handler(request, response) {
         console.log('PARSED TRAKTEER DATA:', JSON.stringify(trakteerData, null, 2));
 
         // 1. VERIFY THE WEBHOOK
-        // IMPORTANT: Trakteer might send the token in headers (e.g., 'X-Trakteer-Token').
-        // This example assumes it's in the body. Please check Trakteer's documentation.
-        if (trakteerData.verification_token !== process.env.TRAKTEER_VERIFICATION_TOKEN) {
-            console.warn('Unauthorized Trakteer webhook attempt.');
+        // Trakteer sends the verification token in the 'x-webhook-token' header.
+        const token = request.headers['x-webhook-token'];
+        if (token !== process.env.TRAKTEER_VERIFICATION_TOKEN) {
+            console.warn(`Unauthorized Trakteer webhook attempt. Token received: ${token}`);
             return response.status(401).json({ error: 'Unauthorized' });
         }
 
