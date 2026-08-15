@@ -26,31 +26,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
     applyTheme(savedTheme || (prefersDarkScheme.matches ? 'dark' : 'light'));
 
-    // --- 2. TUTOR FILTER LOGIC ---
-    const filterButtons = document.querySelectorAll('.filter-btn');
+    // --- 2. TUTOR FILTERING VIA LANGUAGE CARDS ---
+    const langCards = document.querySelectorAll('.lang-card[data-filter]');
     const tutorCards = document.querySelectorAll('.tutor-card');
+    const tutorsSection = document.getElementById('tutors');
 
-    if (filterButtons.length > 0 && tutorCards.length > 0) {
-        // Attach click event listeners to each filter button
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
+    if (langCards.length > 0 && tutorCards.length > 0) {
+        langCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const filter = card.getAttribute('data-filter');
 
-                // A. Update Active Button Style
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
+                // Scroll to the tutors section
+                if (tutorsSection) {
+                    tutorsSection.scrollIntoView({ behavior: 'smooth' });
+                }
 
-                // B. Get the selected filter value (e.g., 'all', 'dutch', 'english')
-                const selectedFilter = button.getAttribute('data-filter');
+                // Update active card style
+                langCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
 
-                // C. Filter the Tutor Cards
-                tutorCards.forEach(card => {
-                    const cardLanguages = card.getAttribute('data-language'); // e.g., "dutch english"
-
-                    // If 'All' is selected, or the card's languages include the filter, show it
-                    if (selectedFilter === 'all' || cardLanguages.includes(selectedFilter)) {
-                        card.classList.remove('hide');
+                // Filter the tutor cards
+                tutorCards.forEach(tutorCard => {
+                    const cardLanguages = tutorCard.getAttribute('data-language');
+                    if (filter === 'all' || cardLanguages.includes(filter)) {
+                        tutorCard.classList.remove('hide');
                     } else {
-                        card.classList.add('hide');
+                        tutorCard.classList.add('hide');
                     }
                 });
             });

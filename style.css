@@ -208,10 +208,17 @@ section > p {
 }
 
 /* CSS Grid for Language Cards */
-.language-grid, .tutor-grid, .pricing-grid, .steps-grid {
+.language-grid, .pricing-grid, .steps-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
+}
+
+.tutor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 350px));
+    gap: 1.5rem;
+    justify-content: center; /* This centers the card(s) if there's extra space */
 }
 
 /* Card Styling */
@@ -227,6 +234,15 @@ section > p {
 .lang-card:hover, .tutor-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.lang-card {
+    cursor: pointer;
+}
+
+.lang-card.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color);
 }
 
 .lang-card .flag {
@@ -255,34 +271,6 @@ section > p {
 .tutor-card p {
     color: var(--text-muted);
     margin-bottom: 1.2rem;
-}
-
-/* ==========================================================================
-   6. FILTER BUTTONS
-   ========================================================================== */
-.filter-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-}
-
-.filter-btn {
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--border-color);
-    background-color: var(--card-bg);
-    color: var(--text-dark);
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.filter-btn:hover, .filter-btn.active {
-    background-color: var(--primary-color);
-    color: #ffffff;
-    border-color: var(--primary-color);
 }
 
 /* ==========================================================================
@@ -606,6 +594,15 @@ footer {
     text-align: center;
     color: var(--text-muted);
     margin-bottom: 2rem;
+}
+
+.tutor-disclaimer {
+    max-width: 800px;
+    margin: -1rem auto 2rem auto; /* Pull it up a bit */
+    padding: 1rem;
+    background-color: #fffbeb; /* Light yellow */
+    color: #78350f; /* Dark yellow/brown text */
+    border-radius: var(--radius);
 }
 
 /* ==========================================================================
@@ -1054,6 +1051,16 @@ body[data-theme="dark"] .filter-btn.active {
     background-color: var(--primary-color);
     color: #ffffff;
     border-color: var(--primary-color);
+}
+
+body[data-theme="dark"] .lang-card.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+body[data-theme="dark"] .tutor-disclaimer {
+    background-color: #3a301c;
+    color: #fde68a;
 }
 
 body[data-theme="dark"] .time-slot {

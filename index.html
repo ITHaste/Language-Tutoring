@@ -80,22 +80,29 @@
             <p>Choose the language you want to master:</p>
             
             <div class="language-grid">
+                <!-- All Languages Card -->
+                <div class="lang-card active" data-filter="all">
+                    <span class="flag">🌍</span>
+                    <h3>All Languages</h3>
+                    <p>View all available tutors.</p>
+                </div>
+
                 <!-- Dutch Card -->
-                <div class="lang-card">
+                <div class="lang-card" data-filter="dutch">
                     <span class="flag">🇳🇱</span>
                     <h3>Dutch</h3>
                     <p>Learn conversational Dutch, grammar, or prepare for integration exams.</p>
                 </div>
 
                 <!-- English Card -->
-                <div class="lang-card">
+                <div class="lang-card" data-filter="english">
                     <span class="flag">🇬🇧</span>
                     <h3>English</h3>
                     <p>Improve business communication, academic writing, or everyday fluency.</p>
                 </div>
 
                 <!-- Indonesian Card -->
-                <div class="lang-card">
+                <div class="lang-card" data-filter="indonesian">
                     <span class="flag">🇮🇩</span>
                     <h3>Indonesian</h3>
                     <p>Master Bahasa Indonesia for travel, business, or everyday conversation.</p>
@@ -106,14 +113,6 @@
         <!-- 4. FEATURED TUTORS SECTION -->
         <section id="tutors" class="tutors-section">
             <h2>Featured Tutors</h2>
-            
-            <!-- Language Filter Buttons (We will hook JavaScript to these in Phase 3) -->
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All Languages</button>
-                <button class="filter-btn" data-filter="dutch">Dutch</button>
-                <button class="filter-btn" data-filter="english">English</button>
-                <button class="filter-btn" data-filter="indonesian">Indonesian</button>
-            </div>
 
             <div class="tutor-grid">
                 <!-- Tutor 1 -->
@@ -121,7 +120,9 @@
                     <div class="tutor-info">
                         <h3>Kevin van Dijken</h3>
                         <p class="tutor-tag">Native Dutch Speaker</p>
-                        <p>Specializes in Dutch conversational practice. Also offers beginner to intermediate English lessons.</p><a href="/kevin-profile" class="btn-secondary">View Profile & Book</a>
+                        <p>Specializes in Dutch conversational practice. Also offers beginner to intermediate English lessons.</p>
+                        <p class="tutor-trial-price">Trial lesson: €5,95</p>
+                        <a href="/kevin-profile" class="btn-secondary">View Profile & Book</a>
                     </div>
                 </article>
 
@@ -130,7 +131,10 @@
                     <div class="tutor-info">
                         <h3>Calvina Risky Amelia</h3>
                         <p class="tutor-tag">Native Indonesian Speaker</p>
-                        <p>Teaches Bahasa Indonesia for all levels. Also provides conversational English practice.</p><a href="/calvina-profile" class="btn-secondary">View Profile & Book</a>
+                        <p>Teaches Bahasa Indonesia for all levels. Also provides conversational English practice.</p>
+                        <!-- TODO: Update with Calvina's actual trial price -->
+                        <p class="tutor-trial-price">Trial lesson: €5,95</p>
+                        <a href="/calvina-profile" class="btn-secondary">View Profile & Book</a>
                     </div>
                 </article>
             </div>
@@ -186,6 +190,16 @@
                     </button>
                     <div class="faq-answer">
                         <p>We offer a full refund on any unused lessons in a pack within 30 days of purchase. Trial lessons are non-refundable. We are committed to your satisfaction and want to ensure you have a great learning experience.</p>
+                    </div>
+                </div>
+                <!-- FAQ Item 4 -->
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Are the tutors professionally certified?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Our tutors are native speakers and language enthusiasts, passionate about sharing their language and culture. They specialize in creating a relaxed, informal environment for conversational practice, helping you build real-world fluency. While they are not formally certified academic teachers, their focus is on practical communication and personalized learning, rather than a rigid curriculum.</p>
                     </div>
                 </div>
             </div>
