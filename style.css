@@ -244,6 +244,7 @@ section > p {
 
 .lang-card {
     cursor: pointer;
+    text-align: center;
 }
 
 .lang-card.active {
@@ -251,9 +252,17 @@ section > p {
     box-shadow: 0 0 0 2px var(--primary-color);
 }
 
-.lang-card .flag {
-    font-size: 4rem; /* Increased size for more prominence */
+.lang-card span.flag {
+    font-size: 5rem; /* Increased size for the globe emoji */
     display: block;
+    margin-bottom: 0.5rem;
+}
+
+.lang-card img.flag {
+    width: 12rem; /* Increased width for SVG flags */
+    height: auto; /* Let height adjust to maintain aspect ratio */
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
     margin-bottom: 0.5rem;
 }
 
@@ -1036,6 +1045,30 @@ footer {
     .time-slot {
         border-left: none; /* Remove side borders on individual slots */
         border-right: none;
+    }
+}
+
+/* For smaller phone screens, scale down the language cards to fit two per row */
+@media screen and (max-width: 600px) {
+    .language-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .lang-card {
+        padding: 1.25rem 0.5rem;
+    }
+
+    .lang-card span.flag {
+        font-size: 3rem;
+    }
+
+    .lang-card img.flag {
+        width: 4rem;
+    }
+
+    .lang-card h3 {
+        font-size: 1rem;
     }
 }
 
