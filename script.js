@@ -1,7 +1,7 @@
 // Wait for the DOM (HTML layout) to fully load before running scripts
 
-console.log("Script loaded successfully!");
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM fully loaded and parsed. script.js is running.");
 
     // --- 1. THEME TOGGLE LOGIC ---
     const themeToggle = document.getElementById('theme-toggle');
