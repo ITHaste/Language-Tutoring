@@ -1,2 +1,9 @@
-# Ignore Node.js dependency folder
+# Node.js
 node_modules
+
+# Environment variables
+.env
+.env.local
+
+# Vercel
+.vercel

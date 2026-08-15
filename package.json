@@ -1,24 +1,17 @@
 {
-  "name": "language-tutoring",
+  "name": "language-tutoring-website",
   "version": "1.0.0",
-  "description": "",
+  "description": "A website for language tutoring.",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ITHaste/Language-Tutoring.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/ITHaste/Language-Tutoring/issues"
-  },
-  "homepage": "https://github.com/ITHaste/Language-Tutoring#readme",
   "dependencies": {
     "redis": "^4.6.13",
-    "resend": "^3.2.0"
+    "resend": "^3.2.0",
+    "stripe": "^15.8.0"
   }
 }
