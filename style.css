@@ -207,6 +207,12 @@ section > p {
     margin-bottom: 2.5rem;
 }
 
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
 /* CSS Grid for Language Cards */
 .language-grid, .pricing-grid, .steps-grid {
     display: grid;
@@ -272,6 +278,25 @@ section > p {
     color: var(--text-muted);
     margin-bottom: 1.2rem;
 }
+
+/* Why Choose Us Section */
+.feature-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.feature-card img {
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+}
+
 
 /* ==========================================================================
    7. FOOTER
