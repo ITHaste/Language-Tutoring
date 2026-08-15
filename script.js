@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 5. FAQ ACCORDION LOGIC ---
+    // --- 4. FAQ ACCORDION LOGIC ---
     const faqItems = document.querySelectorAll('.faq-item');
 
     if (faqItems.length > 0) {
@@ -149,4 +149,52 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- 7. STRIPE PAYMENT INTEGRATION ---
+    document.querySelectorAll('button.purchase-btn').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            const originalButtonText = button.textContent;
+            button.disabled = true;
+            button.textContent = 'Redirecting...';
+
+            const productName = button.dataset.productName;
+            const unitAmount = parseFloat(button.dataset.unitAmount);
+            const quantity = parseInt(button.dataset.quantity || '1');
+            const tutorNameElement = document.querySelector('.profile-details h1');
+            const tutorName = tutorNameElement ? tutorNameElement.textContent.trim().split(' ')[0] : 'Unknown Tutor';
+
+            if (!productName || isNaN(unitAmount)) {
+                console.error('Missing product details for Stripe checkout.');
+                alert('Could not initiate payment. Missing product details.');
+                button.disabled = false;
+                button.textContent = originalButtonText;
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/create-checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productName, unitAmount, quantity, tutorName, cancelPath: window.location.pathname }),
+                });
+
+                const session = await response.json();
+
+                if (session.url) {
+                    window.location.href = session.url; // Redirect to Stripe Checkout
+                } else {
+                    button.disabled = false;
+                    button.textContent = originalButtonText;
+                    alert(session.error || 'Failed to create checkout session.');
+                }
+            } catch (error) {
+                console.error('Error initiating Stripe checkout:', error);
+                button.disabled = false;
+                button.textContent = originalButtonText;
+                alert('An error occurred while initiating payment. Please try again.');
+            }
+        });
+    });
 });

@@ -1,5 +1,6 @@
 import { createClient } from 'redis';
-import { Resend } from 'resend';
+import { getBaseUrl } from './utils/getBaseUrl.js';
+import { sendSchedulingEmail } from './utils/sendSchedulingEmail.js';
 
 // This function receives a webhook from Ko-fi after a purchase
 // and stores the transaction ID in a temporary database (Vercel Redis).
@@ -16,7 +17,6 @@ export default async function handler(request, response) {
     }
 
     const redis = createClient({ url: process.env.REDIS_URL });
-    const resend = new Resend(process.env.RESEND_API_KEY);
 
     try {
         await redis.connect();
@@ -52,19 +52,13 @@ export default async function handler(request, response) {
                     const purchaseDetails = JSON.stringify({ tutor: tutorName, email: buyerEmail });
                     await redis.set(transactionId, purchaseDetails, { EX: 3600 * 24 * 90 });
 
-                    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
-                    const scheduleUrl = `${baseUrl}/schedule?tutor=${tutorName}&transactionId=${transactionId}`;
+                    const scheduleUrl = `${getBaseUrl()}/schedule?tutor=${tutorName}&transactionId=${transactionId}`;
 
                     try {
-                        await resend.emails.send({
-                            from: process.env.RESEND_FROM_EMAIL,
-                            to: [buyerEmail],
-                            subject: 'Your Lesson is Ready to be Scheduled!',
-                            html: `<h1>Thank you for your purchase!</h1><p>You can schedule your lesson with ${tutorName.charAt(0).toUpperCase() + tutorName.slice(1)} by clicking the link below. After you schedule, your tutor will send a Google Meet invitation to your email.</p>
-                                   <p><a href="${scheduleUrl}">Schedule Your Lesson</a></p>
-                                   <p>This link is valid for 90 days and can only be used once.</p>
-                                   <p>If you have any questions, please reply to this email.</p>
-                                   <p>Thank you,<br>The Polyglot Hub</p>`,
+                        await sendSchedulingEmail({
+                            to: buyerEmail,
+                            tutorName: tutorName,
+                            scheduleUrl: scheduleUrl,
                         });
                         console.log(`Successfully sent scheduling email to ${buyerEmail} for tutor ${tutorName}.`);
                     } catch (emailError) {
