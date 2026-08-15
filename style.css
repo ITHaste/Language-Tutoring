@@ -246,7 +246,7 @@ section > p {
 }
 
 .lang-card .flag {
-    font-size: 2.5rem;
+    font-size: 4rem; /* Increased size for more prominence */
     display: block;
     margin-bottom: 0.5rem;
 }
